@@ -54,30 +54,78 @@ sudo umount /mnt
 
 ## building from source
 
-the keyboard source ([source/m57/](source/m57/)) is a drop-in for vial-qmk, not a standalone project. setup:
+the keyboard source ([source/m57/](source/m57/)) is a drop-in for vial-qmk, not a standalone project.
+
+### prerequisites
+
+- **arm-none-eabi-gcc** — install via your package manager:
+  - **Ubuntu/Debian**: `sudo apt install gcc-arm-none-eabi`
+  - **Arch**: `sudo pacman -S arm-none-eabi-gcc`
+  - **Fedora**: `sudo dnf install arm-none-eabi-gcc-cs`
+  - **macOS**: `brew install --cask gcc-arm-embedded`
+  - **QMK toolchain**: `qmk setup` (puts it in `~/.local/share/qmk/bin/`)
+- **Python 3.8+** — vial-qmk's build scripts require it
+- **git** — for cloning and submodules
+
+### steps
 
 ```bash
-# clone vial-qmk (~1.4GB with submodules)
+# 1. clone vial-qmk (~1.4GB with submodules)
 git clone --depth 1 https://github.com/vial-kb/vial-qmk ~/projects/vial-qmk
 cd ~/projects/vial-qmk
 git submodule update --init --recursive --depth 1
 
-# symlink the keyboard def into the qmk tree
+# 2. symlink the keyboard def into the qmk tree
 ln -s /path/to/this/repo/source/m57 ~/projects/vial-qmk/keyboards/m57
 
-# place the linker scripts where qmk's build system expects
+# 3. create keyboard.json symlink (required for vial-qmk to discover the keyboard)
+ln -s info.json ~/projects/vial-qmk/keyboards/m57/keyboard.json
+
+# 4. place the linker scripts where qmk's build system expects
 cp /path/to/this/repo/source/ld/QF_STM32F401.ld \
    /path/to/this/repo/source/ld/PlumBL_STM32F401.ld \
    ~/projects/vial-qmk/platforms/chibios/boards/common/ld/
 
-# build (nixos: get qmk + arm-none-eabi-gcc via nix-shell)
-nix-shell -p qmk --run "cd ~/projects/vial-qmk && make m57:via"
+# 5. fix info.json — change bootloader from "custom" to "tinyuf2"
+#    (PlumBL is UF2-compatible; "custom" causes "Platform not defined" error)
+sed -i 's/"bootloader": "custom"/"bootloader": "tinyuf2"/' ~/projects/vial-qmk/keyboards/m57/info.json
+
+# 6. fix info.json — missing comma between [9,2] and [9,3] entries (line ~126)
+#    this is a vendor bug; fix it so the build doesn't fail
+python3 -c "
+import json
+p = 'keyboards/m57/info.json'
+with open(p) as f: txt = f.read()
+txt = txt.replace('\"y\": 3.7}\n                {\"matrix\": [9, 3]', '\"y\": 3.7},\n                {\"matrix\": [9, 3]')
+with open(p, 'w') as f: f.write(txt)
+"
+
+# 7. fix Python 3.12+ compatibility (ast.Num removed)
+sed -i 's/if isinstance(node, ast.Num):  # <number>/if isinstance(node, ast.Constant):  # <number> (Python 3.8+)\n        return node.value\n    elif isinstance(node, ast.Num):  # <number> (fallback)/' \
+    ~/projects/vial-qmk/lib/python/qmk/math.py
+
+# 8. build
+make m57:via
 
 # output:
 ls ~/projects/vial-qmk/.build/m57_via.uf2
 ```
 
-non-nixos: install `qmk` cli + `gcc-arm-embedded` via your package manager.
+### nixos
+
+```bash
+nix-shell -p qmk gcc-arm-embedded --run "cd ~/projects/vial-qmk && make m57:via"
+```
+
+### troubleshooting
+
+| error | fix |
+|---|---|
+| `invalid keyboard_folder_or_all value: 'm57'` | missing `keyboard.json` symlink — run step 3 |
+| `Platform not defined` | bootloader is `custom` — run step 5 |
+| `JSONDecodeError` in info.json | missing comma — run step 6 |
+| `AttributeError: module 'ast' has no attribute 'Num'` | Python 3.12+ incompatibility — run step 7 |
+| `arm-none-eabi-gcc: Permission denied` | not in PATH — add `~/.local/share/qmk/bin` or install system package |
 
 ## vial keymap
 
@@ -105,9 +153,10 @@ todo.md                 work-in-progress notes during the patch sessions
 
 ## known rough edges
 
-- `source/m57/info.json` has a missing comma + trailing commas around the `[9, 2]` / `[9, 3]` block. qmk still parses it but `qmk lint` complains. fix only when it actually blocks a build
+- `source/m57/info.json` has a missing comma around the `[9, 2]` / `[9, 3]` block and uses `"bootloader": "custom"` which breaks vial-qmk builds. the build steps above patch both automatically
 - right half led mapping is verified for matrix col → user col alignment, but a few inner-extra LED positions are physically asymmetric vs left half (the PCB chain isn't a perfect mirror). see commit `8c3e666` for details
 - if you change the eeprom layout (e.g., bump `DYNAMIC_KEYMAP_LAYER_COUNT`), the wear-leveling backing region needs to grow too (`WEAR_LEVELING_BACKING_SIZE` in `config.h`). don't raise `DYNAMIC_KEYMAP_EEPROM_MAX_ADDR` past 4095 without adjusting this
+- vial-qmk's `lib/python/qmk/math.py` uses `ast.Num` which was removed in Python 3.12. the build steps above patch this
 
 ## sources / credits
 
