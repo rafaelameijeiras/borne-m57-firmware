@@ -39,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       LCTL_T(KC_ESC), LTDGUI, LTDALT, LTDSHIT, LTDCTRL, KC_G,  KC_DOWN,     KC_RIGHT, KC_H,  RTDCTRL, RTDSHIT, RTDALT, RTDGUI,  KC_ENT, 
       KC_LSFT,        KC_Z,   KC_X,   KC_C,    KC_V,    KC_B,  KC_MUTE,     RGB_MOD,  KC_N,  KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
       //__________________________________________________________________________________________________________________________________________________________________
-                              KC_LGUI,LOWER, MEH_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
+                              KC_MEH,LOWER, LGUI_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
 
   ),
   [_GAME] = LAYOUT(
@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       LCTL_T(KC_CAPS), KC_A,   KC_S,   KC_D,    KC_F,    KC_G,  KC_PSCR,     KC_RIGHT, KC_H,  KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT, 
       KC_LSFT,         KC_Z,   KC_X,   KC_C,    KC_V,    KC_B,  KC_MUTE,     RGB_MOD,  KC_N,  KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
       //__________________________________________________________________________________________________________________________________________________________________
-                              KC_LGUI,LOWER, KC_SPC,                                            SPCMOV , RAISE, KC_RALT
+                              KC_MEH,LOWER, KC_SPC,                                            SPCMOV , RAISE, KC_RALT
   ),
 
   [_LOWER] = LAYOUT(
@@ -57,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______,  KC_LGUI, KC_LALT,    KC_LSFT,    KC_LCTL,    _______, KC_F12,         KC_F12,   KC_BSLS, KC_MINS , KC_EQL,  KC_LBRC, KC_RBRC, KC_QUOT,
       _______,  _______, LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______, QK_BOOT,        QK_BOOT,  _______, _______ , _______, _______, _______, _______,
       //__________________________________________________________________________________________________________________________________________________________________
-                              KC_LGUI,LOWER, MEH_T(KC_ENT),                                        SPCMOV , MO(_ADJUST), KC_RALT
+                              KC_MEH,LOWER, LGUI_T(KC_ENT),                                        SPCMOV , MO(_ADJUST), KC_RALT
   ),
 
   [_RAISE] = LAYOUT(
@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______ , KC_LGUI, KC_LALT,    KC_LSFT,    KC_LCTL,    _______, KC_F12,         KC_F12,  KC_PIPE, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_DQUO,
       _______,  _______, LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______, QK_BOOT,        QK_BOOT, _______, _______, _______, _______, _______, _______ ,
       //__________________________________________________________________________________________________________________________________________________________________
-                              KC_LGUI,MO(_ADJUST), MEH_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
+                              KC_MEH,MO(_ADJUST), LGUI_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
   ),
 
   [_ADJUST] = LAYOUT(
@@ -75,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       XXXXXXX, XXXXXXX,       XXXXXXX,   XXXXXXX, MS_BTN1, MS_BTN2,  XXXXXXX,     XXXXXXX,  MS_LEFT, MS_DOWN, MS_UP,   MS_RGHT, XXXXXXX, XXXXXXX,
       XXXXXXX, XXXXXXX,       XXXXXXX,   XXXXXXX, MS_BTN3, MS_BTN3,  XXXXXXX,     XXXXXXX,  MS_ACL0, MS_ACL1, MS_ACL2, XXXXXXX, XXXXXXX, XXXXXXX,
       //__________________________________________________________________________________________________________________________________________________________________
-                              KC_LGUI,LOWER, MEH_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
+                              KC_MEH,LOWER, LGUI_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
 
   ),
   [_NUM] = LAYOUT(
@@ -84,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       XXXXXXX, KC_LGUI,    KC_LALT,    KC_LSFT,    KC_LCTL,    XXXXXXX,  KC_DOWN,     KC_RIGHT, KC_DOT,  KC_4,     KC_5,     KC_6,     KC_PMNS,    _______, 
       XXXXXXX, XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,  KC_MUTE,     RGB_MOD,  KC_0,    KC_1,     KC_2,     KC_3,     KC_SLSH,    _______,
       //__________________________________________________________________________________________________________________________________________________________________
-                              KC_LGUI,LOWER, MEH_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
+                              KC_MEH,LOWER, LGUI_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
 
   ),
   [_MOV] = LAYOUT(
@@ -93,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       XXXXXXX, KC_LGUI,    KC_LALT,    KC_LSFT,    KC_LCTL,    XXXXXXX,  KC_DOWN,     KC_RIGHT, KC_LEFT, KC_DOWN,  KC_UP,    KC_RIGHT, KC_DEL,    _______, 
       KC_CAPS, _______,    LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______,  KC_MUTE,     RGB_MOD,  KC_HOME, KC_PGDN,  KC_PGUP,  KC_END,   XXXXXXX,   _______,
       //__________________________________________________________________________________________________________________________________________________________________
-                              KC_LGUI,LOWER, MEH_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
+                              KC_MEH,LOWER, LGUI_T(KC_ENT),                                        SPCMOV , RAISE, KC_RALT
 
   ),
 
